@@ -83,4 +83,12 @@ form.addEventListener("submit", (e) => {
   render();
   form.reset();
 });
+// ---------- Eliminar (delegación de eventos) ----------
+tablaGastos.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-eliminar")) {
+    const id = Number(e.target.dataset.id);
+    gastos = gastos.filter(gasto => gasto.id !== id);
+    render();
+  }
+});
 render();
