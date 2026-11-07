@@ -21,9 +21,15 @@ const formatoPesos = new Intl.NumberFormat("es-CO", {
 
 // ---------- Render ----------
 function render() {
+  // gastos que se van a mostrar según el filtro
+  const categoria = selectFiltro.value;
+  const visibles = categoria === "Todas"
+    ? gastos
+    : gastos.filter(gasto => gasto.categoria === categoria);
+
   tablaGastos.innerHTML = "";
 
-  gastos.forEach(gasto => {
+  visibles.forEach(gasto => {
     const fila = document.createElement("tr");
 
     const tdDescripcion = document.createElement("td");
@@ -46,10 +52,13 @@ function render() {
     tablaGastos.appendChild(fila);
   });
 
-  // total y alerta de presupuesto
-  const total = gastos.reduce((suma, gasto) => suma + gasto.valor, 0);
-  parrafoTotal.textContent = "Total: " + formatoPesos.format(total);
-  parrafoTotal.classList.toggle("excedido", total > PRESUPUESTO);
+  // total de lo que se ve en pantalla
+  const totalVisible = visibles.reduce((suma, gasto) => suma + gasto.valor, 0);
+  parrafoTotal.textContent = "Total: " + formatoPesos.format(totalVisible);
+
+  // alerta de presupuesto con el total general
+  const totalGeneral = gastos.reduce((suma, gasto) => suma + gasto.valor, 0);
+  parrafoTotal.classList.toggle("excedido", totalGeneral > PRESUPUESTO);
 }
 
 // ---------- Agregar gasto ----------
@@ -101,5 +110,8 @@ tablaGastos.addEventListener("click", (e) => {
     render();
   }
 });
+
+// ---------- Filtro ----------
+selectFiltro.addEventListener("change", render);
 
 render();
