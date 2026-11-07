@@ -9,13 +9,16 @@ const errorCategoria = document.getElementById("error-categoria");
 const selectFiltro = document.getElementById("filtro");
 const tablaGastos = document.getElementById("tabla-gastos");
 const parrafoTotal = document.getElementById("total");
+
 // ---------- Datos ----------
 let gastos = [];
+const PRESUPUESTO = 500000;
 const formatoPesos = new Intl.NumberFormat("es-CO", {
   style: "currency",
   currency: "COP",
   maximumFractionDigits: 0
 });
+
 // ---------- Render ----------
 function render() {
   tablaGastos.innerHTML = "";
@@ -42,7 +45,13 @@ function render() {
     fila.append(tdDescripcion, tdCategoria, tdValor, tdAccion);
     tablaGastos.appendChild(fila);
   });
+
+  // total y alerta de presupuesto
+  const total = gastos.reduce((suma, gasto) => suma + gasto.valor, 0);
+  parrafoTotal.textContent = "Total: " + formatoPesos.format(total);
+  parrafoTotal.classList.toggle("excedido", total > PRESUPUESTO);
 }
+
 // ---------- Agregar gasto ----------
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -83,6 +92,7 @@ form.addEventListener("submit", (e) => {
   render();
   form.reset();
 });
+
 // ---------- Eliminar (delegación de eventos) ----------
 tablaGastos.addEventListener("click", (e) => {
   if (e.target.classList.contains("btn-eliminar")) {
@@ -91,4 +101,5 @@ tablaGastos.addEventListener("click", (e) => {
     render();
   }
 });
+
 render();

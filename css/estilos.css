@@ -1,0 +1,8 @@
+#total {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+#total.excedido {
+  color: red;
+}
