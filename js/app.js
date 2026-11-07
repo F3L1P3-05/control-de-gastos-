@@ -11,13 +11,17 @@ const tablaGastos = document.getElementById("tabla-gastos");
 const parrafoTotal = document.getElementById("total");
 
 // ---------- Datos ----------
-let gastos = [];
+let gastos = JSON.parse(localStorage.getItem("gastos")) || [];
 const PRESUPUESTO = 500000;
 const formatoPesos = new Intl.NumberFormat("es-CO", {
   style: "currency",
   currency: "COP",
   maximumFractionDigits: 0
 });
+
+function guardar() {
+  localStorage.setItem("gastos", JSON.stringify(gastos));
+}
 
 // ---------- Render ----------
 function render() {
@@ -98,6 +102,7 @@ form.addEventListener("submit", (e) => {
 
   // Registrar el gasto
   gastos.push({ id: Date.now(), descripcion, valor, categoria });
+  guardar();
   render();
   form.reset();
 });
@@ -107,6 +112,7 @@ tablaGastos.addEventListener("click", (e) => {
   if (e.target.classList.contains("btn-eliminar")) {
     const id = Number(e.target.dataset.id);
     gastos = gastos.filter(gasto => gasto.id !== id);
+    guardar();
     render();
   }
 });
