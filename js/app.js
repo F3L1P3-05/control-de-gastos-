@@ -9,10 +9,13 @@ const errorCategoria = document.getElementById("error-categoria");
 const selectFiltro = document.getElementById("filtro");
 const tablaGastos = document.getElementById("tabla-gastos");
 const parrafoTotal = document.getElementById("total");
+const inputPresupuesto = document.getElementById("presupuesto");
 
 // ---------- Datos ----------
 let gastos = JSON.parse(localStorage.getItem("gastos")) || [];
-const PRESUPUESTO = 500000;
+let presupuesto = Number(localStorage.getItem("presupuesto")) || 500000;
+inputPresupuesto.value = presupuesto;
+
 const formatoPesos = new Intl.NumberFormat("es-CO", {
   style: "currency",
   currency: "COP",
@@ -62,7 +65,7 @@ function render() {
 
   // alerta de presupuesto con el total general
   const totalGeneral = gastos.reduce((suma, gasto) => suma + gasto.valor, 0);
-  parrafoTotal.classList.toggle("excedido", totalGeneral > PRESUPUESTO);
+  parrafoTotal.classList.toggle("excedido", totalGeneral > presupuesto);
 }
 
 // ---------- Agregar gasto ----------
@@ -119,5 +122,15 @@ tablaGastos.addEventListener("click", (e) => {
 
 // ---------- Filtro ----------
 selectFiltro.addEventListener("change", render);
+
+// ---------- Presupuesto ajustable ----------
+inputPresupuesto.addEventListener("input", () => {
+  const nuevo = Number(inputPresupuesto.value);
+  if (nuevo > 0) {
+    presupuesto = nuevo;
+    localStorage.setItem("presupuesto", presupuesto);
+    render();
+  }
+});
 
 render();
