@@ -43,5 +43,44 @@ function render() {
     tablaGastos.appendChild(fila);
   });
 }
+// ---------- Agregar gasto ----------
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
+  const descripcion = inputDescripcion.value.trim();
+  const valor = Number(inputValor.value);
+  const categoria = selectCategoria.value;
+
+  // Limpiar errores anteriores
+  errorDescripcion.textContent = "";
+  errorValor.textContent = "";
+  errorCategoria.textContent = "";
+  let valido = true;
+
+  // Validaciones
+  if (descripcion === "") {
+    errorDescripcion.textContent = "La descripción es obligatoria.";
+    valido = false;
+  }
+
+  if (inputValor.value === "") {
+    errorValor.textContent = "El valor es obligatorio.";
+    valido = false;
+  } else if (valor <= 0) {
+    errorValor.textContent = "El valor debe ser mayor que cero.";
+    valido = false;
+  }
+
+  if (categoria === "") {
+    errorCategoria.textContent = "Selecciona una categoría.";
+    valido = false;
+  }
+
+  if (!valido) return;
+
+  // Registrar el gasto
+  gastos.push({ id: Date.now(), descripcion, valor, categoria });
+  render();
+  form.reset();
+});
 render();
